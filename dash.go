@@ -44,6 +44,20 @@ func runtimeReport(client *http.Client) {
 	}
 }
 
+/*
+TODO
+figure out what information to collect, either via discovery, or by user input.
+on first run, collect all historical data possible, with all information from above
+on subsequent runs, figure out what data exists and get new data since then
+while running, periodically poll for more information
+while running, poll thermostat every 5 mins to get an idea of what the next 1 hour of data will look like. store it separately though.
+make sure to stay under an api call quota
+all of this data needs to be stored in a sqlite db: https://github.com/mattn/go-sqlite3; store in 5 min intervals 
+add apis to get the data! maybe change their formats, maybe keep a similar format to ecobee
+
+add an api to calculate cost based on tables for efficiency and configured cost for stage per time period
+/*
+
 func main() {
 	config := configuration.LoadConfig("default.conf")
 	// get api key from config
@@ -54,8 +68,5 @@ func main() {
 	// currentTemp(client)
 	// summary(client)
 	runtimeReport(client)
-
-	// access token expires after 1 hour, refresh token after 1 year
-	// return http client delegate, which will retry requests on auth errors, after refreshing tokens
 
 }
