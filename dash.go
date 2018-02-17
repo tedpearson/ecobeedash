@@ -1,11 +1,15 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
+	"time"
 
 	"github.com/tedpearson/ecobeedash/http"
+	"github.com/tedpearson/ecobeedash/util"
 
 	"github.com/go-akka/configuration"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 var (
@@ -44,6 +48,62 @@ func runtimeReport(client *http.Client) {
 	}
 }
 
+const (
+	Home             = iota
+	Away             = iota
+	SmartAway        = iota
+	SmartHome        = iota
+	Hold             = iota
+	SmartRecoverMode = iota
+	VacationMode     = iota
+)
+
+// MomentKey contains labels for Moments
+type MomentKey struct {
+	Temps    []string
+	Running  []string
+	Presense []string
+}
+
+// RunTime show how long something was running, and if it ran at the start or end of a period.
+type RunTime struct {
+	Time    int
+	AtStart bool
+}
+
+// Moment represents a period of furnace operation, including runtimes, modes, sensor temperatures & presence.
+type Moment struct {
+	Time        time.Time
+	Temps       []float64
+	RunTime     []RunTime
+	Mode        int
+	OverlayMode int
+	Presence    []bool
+}
+
+func DiscoverInfo() {
+
+}
+
+func HistorySince(date time.Time) {
+
+}
+
+func FirstDataDate() {
+
+}
+
+func SaveMoment(m *Moment) {
+
+}
+
+func StartDb() {
+	db, err := sql.Open("sqlite3", "./foo.db")
+	util.CheckError(err, "db failure")
+	res, err := db.Exec("create table foo (bar text)")
+	fmt.Println(res.RowsAffected())
+}
+
 /*
 TODO
 figure out what information to collect, either via discovery, or by user input.
@@ -64,9 +124,10 @@ func main() {
 
 	// check if tokens exist.
 	apiKey = config.GetString("api-key")
-	client := http.NewClient(apiKey)
+	StartDb()
+	// client := http.NewClient(apiKey)
 	// currentTemp(client)
 	// summary(client)
-	runtimeReport(client)
+	// runtimeReport(client)
 
 }
